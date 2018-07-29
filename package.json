@@ -10,12 +10,14 @@
     "watch-node": "nodemon dist/server.js",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "copy": "ts-node copyStaticAssets.ts",
+    "addmodel": "ts-node utils.ts",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\""
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
     "concurrently": "^3.6.1",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",

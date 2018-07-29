@@ -17,7 +17,10 @@ html
         ul.nav.navbar-nav
           li.nav-item
             a.nav-link(href='/login') Login
-    .container
+          if user
+            li.nav-item
+              a.nav-link(href='/profile') #{user.username}
+    .container-fluid
       block content
       br
       hr

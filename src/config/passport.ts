@@ -17,6 +17,8 @@ export let local = passport.use('local',
         username: username,
         password: bcrypt.hashSync(password)
       });
+      await user.save();
+      console.log(user);
       return done(null, user);
     }
     return done(null, false, {message: 'Invalid Username or Password'});
@@ -24,11 +26,14 @@ export let local = passport.use('local',
 );
 
 passport.serializeUser(function(user: User, done) {
+  console.log('tried to serialize');
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id: number, done) {
-  User.findById(id, (err: any, user: any) => {
-    done(err, user);
+  User.findById(id).then(user => {
+    done(null, user);
   });
 });
+
+export default passport;

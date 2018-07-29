@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "esModuleInterop": true,
-        "target": "es5",
+        "target": "es6",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "noImplicitAny": true,
@@ -10,7 +10,7 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "keyofStringsOnly": true,
-        "lib": [ "es2015" ],
+        "lib": [ "es2015", "es7" ],
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
