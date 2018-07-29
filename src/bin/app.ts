@@ -36,6 +36,8 @@ const sequelize = new Sequelize({
 // set dev views
 if (app.get('env') === 'development') {
   app.set('views', path.join(__dirname, '../../src/views'));
+} else {
+  app.set('views', path.join(__dirname, '../views'));
 }
 app.set('view engine', 'pug');
 app.set('port', process.env.PORT || 8000);
