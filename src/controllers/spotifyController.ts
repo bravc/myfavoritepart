@@ -9,7 +9,7 @@ const request = require('request');
 const rp = require('request-promise');
 rp.options.simple = false;
 
-const redirect_uri = 'http://localhost:8000/callback';
+const redirect_uri = process.env.SPOTIFY_REDIRECT ;
 const client_id = process.env.SPOTIFY_CLIENT;
 const client_secret = process.env.SPOTIFY_SECRET;
 const stateKey = 'spotify_auth_state';
