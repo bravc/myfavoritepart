@@ -3,14 +3,14 @@ extends layout
 
 block content
 
-    #login
-        h1 This is an example of the Authorization Code flow
-        a.btn.btn-primary(href='/login') Log in with Spotify
-        a.btn.btn-primary(href='/auth') Get auth
-        a.btn.btn-primary(href='/auth/refresh') Refresh auth
-        a.btn.btn-primary(href='/top') Get top songs
-    #loggedin
-        #user-profile
-        #oauth
-        button#obtain-new-token.btn.btn-default Obtain new token using the refresh token
+    #login.text-center
+        h1 Login with Spotify
+        if user
+                a.btn.btn-primary(href='/top') Get top songs
+        br
+        br
+
+        a.btn.btn-primary(href='/auth') Log in
+
+
 

@@ -99,7 +99,7 @@ export let authCallback = (req: Request, res: Response) => {
         const refresh_token = body.refresh_token;
         res.cookie('auth_token', access_token);
         res.cookie('refresh_token', refresh_token);
-        res.redirect('/login');
+        res.render('index.pug', {user: body});
       }
     });
   }
