@@ -101,7 +101,7 @@ export let login = async (auth_token: number, refresh_token: number) => {
  *
  * @param auth_token number
  */
-export let makePlaylist = (auth_token: number, user_id: number) => {
+export let makePlaylist = (auth_token: number, user_id: number): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         const options = {
             url: `https://api.spotify.com/v1/users/${user_id}/playlists`,

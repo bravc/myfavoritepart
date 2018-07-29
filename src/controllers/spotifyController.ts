@@ -178,6 +178,5 @@ export let isAuthenticated = (req: Request, res: Response, next: NextFunction) =
         return next();
     }
     console.log(req.user);
-    req.flash('not authed');
     res.redirect('/');
 };
