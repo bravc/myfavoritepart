@@ -1,11 +1,16 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "esModuleInterop": false,
+        "esModuleInterop": true,
         "target": "es5",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "noImplicitAny": true,
+        "noEmitOnError": false,
         "moduleResolution": "node",
         "sourceMap": true,
+        "keyofStringsOnly": true,
+        "lib": [ "es2015" ],
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {

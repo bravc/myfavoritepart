@@ -1,0 +1,21 @@
+{
+    "dev": {
+      "driver": "mysql",
+      "user": {"ENV": "DB_USER"},
+      "password": {"ENV": "DB_PASS"},
+      "host": {"ENV": "DB_HOST"},
+      "database": "myfavoritepart",
+      "multipleStatements": true
+    },
+  
+    "test": {
+      "driver": "sqlite3",
+      "filename": ":memory:"
+    },
+  
+    "prod": {
+      "driver": "mysql",
+      "user": "root",
+      "password": "root"
+    }
+  }
