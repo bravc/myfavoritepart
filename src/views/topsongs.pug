@@ -2,6 +2,7 @@ extends layout
 
 block content
 
+    br
     ul.list-group
         for song in songs
-            li.list-group-item song.title
+            li.list-group-item #{song.name}

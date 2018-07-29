@@ -41,16 +41,16 @@ app.set('view engine', 'pug');
 app.set('port', process.env.PORT || 8000);
 
 // Logging
-app.use(
-  expressWinston.logger({
-    transports: [
-      new winston.transports.Console({
-        json: true,
-        colorize: true
-      })
-    ]
-  })
-);
+// app.use(
+//   expressWinston.logger({
+//     transports: [
+//       new winston.transports.Console({
+//         json: true,
+//         colorize: true
+//       })
+//     ]
+//   })
+// );
 
 // API Endpoints
 app.get('/', (req, res) => {

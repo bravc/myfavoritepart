@@ -105,11 +105,11 @@ export let authCallback = (req: Request, res: Response) => {
   }
 };
 
-export let authRefresh = (req: Request, res: Response) => {
+export let authRefresh = async (req: Request, res: Response) => {
   // requesting access token from refresh token
-  return new Promise((resolve, reject) => {
-    const refresh_token =
-      req.query.refresh_token || req.cookies['refresh_token'];
+  return new Promise(async (resolve, reject) => {
+    const refresh_token = req.cookies['refresh_token'];
+    console.log(refresh_token);
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       headers: {
@@ -123,20 +123,21 @@ export let authRefresh = (req: Request, res: Response) => {
       },
       json: true
     };
-    request.post(authOptions, function(error: any, response: any, body: any) {
-      if (!error && response.statusCode === 200) {
-        const access_token = body.access_token;
-        resolve(access_token);
-      }
-    });
-    console.log('You suck');
-    reject('You suck');
+    const response = await rp.post(authOptions);
+    console.log(response);
+    if (response) {
+      console.log('got auth');
+      const access_token = response.access_token;
+      resolve(access_token);
+    } else {
+      console.log('You suck');
+      reject('You suck');
+    }
   });
 };
 
 export let spotifyLogin = (req: Request, res: Response) => {
   const token: number = req.cookies['auth_token'];
-  console.log('This is the token: ' + token);
 
   const options = {
     url: 'https://api.spotify.com/v1/me',
@@ -169,9 +170,9 @@ export let getTopSongs = async (req: Request, res: Response) => {
 
     const response = await rp.get(options);
 
-    if (response.statusCode === 200) {
-      console.log(response.body);
-      res.render('topsongs.pug', { songs: response.body.items });
+    if (response) {
+      console.log(response);
+      res.render('topsongs.pug', { songs: response.items });
     } else {
       // refresh auth token and try again
       token = await authRefresh(req, res);
@@ -183,7 +184,7 @@ export let getTopSongs = async (req: Request, res: Response) => {
         json: true
       };
       const response = await rp.get(options);
-      res.render('topsongs.pug', { songs: response.body.items });
+      res.render('topsongs.pug', { songs: response.items });
     }
   } catch (e) {
     console.log('You fucked up');
