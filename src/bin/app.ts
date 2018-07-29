@@ -18,13 +18,30 @@ import { Sequelize } from 'sequelize-typescript';
 
 require('dotenv').config();
 
+app.use(
+  session({
+    resave: true,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
+
 app
   .use(cors())
   .use(cookieParser())
   .use(bodyParser.urlencoded({ extended: false }));
 
 // set up db
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   database: 'myfavoritepart',
   dialect: 'mysql',
   username: process.env.DB_USER,
@@ -56,24 +73,13 @@ app.set('port', process.env.PORT || 8000);
 
 // API Endpoints
 app.get('/', (req, res) => {
-  res.render('index.pug');
+  if (req.user) {
+    res.render('index.pug');
+  } else {
+    res.render('login.pug');
+  }
 });
 
-app.use(
-  session({
-    resave: true,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
-app.use((req, res, next) => {
-  res.locals.user = req.user;
-  next();
-});
 
 import * as spotfiyController from '../controllers/spotifyController';
 import * as userController from '../controllers/userController';
@@ -85,7 +91,7 @@ app.get('/auth/refresh', spotfiyController.authRefresh);
 app.get('/top', spotfiyController.getTopSongs);
 
 // login routes
-app.get('/login', spotfiyController.spotifyLogin);
+app.get('/login', userController.loginGet);
 app.post('/login', userController.loginPost);
 
 // export our app

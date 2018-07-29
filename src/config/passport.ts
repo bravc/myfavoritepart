@@ -1,64 +1,34 @@
-// import passport from "passport";
-// import request from "request";
-// import passportLocal from "passport-local";
-// import passportFacebook from "passport-facebook";
-// import _ from "lodash";
+import passport from 'passport';
+const LocalStrategy = require('passport-local').Strategy;
+import * as bcrypt from 'bcrypt-nodejs';
 
-// import { default as User, UserModel } from "../models/User";
-// import { Request, Response, NextFunction } from "express";
+import { User } from '../models/User';
+import { Request } from 'express';
 
-// const LocalStrategy = passportLocal.Strategy;
-// const FacebookStrategy = passportFacebook.Strategy;
+export let local = passport.use('local',
+  new LocalStrategy({passReqToCallback : true}, async (req: Request, username: string, password: string, done: any) => {
+    const user = await User.findOne({ where: { username: username } });
+    if (user) {
+      if (bcrypt.compareSync(password, user.password)) {
+        return done(null, user);
+      }
+    } else {
+      const user = new User({
+        username: username,
+        password: bcrypt.hashSync(password)
+      });
+      return done(null, user);
+    }
+    return done(null, false, {message: 'Invalid Username or Password'});
+  })
+);
 
-// passport.serializeUser<any, any>((user, done) => {
-//   done(undefined, user.id);
-// });
+passport.serializeUser(function(user: User, done) {
+  done(null, user.id);
+});
 
-// passport.deserializeUser((id, done) => {
-//   User.findById(id, (err: any, user: UserModel) => {
-//     done(err, user);
-//   });
-// });
-
-
-// /**
-//  * Sign in using Email and Password.
-//  */
-// passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-//   User.findOne({ email: email.toLowerCase() }, (err: any, user: any) => {
-//     if (err) { return done(err); }
-//     if (!user) {
-//       return done(undefined, false, { message: `Email ${email} not found.` });
-//     }
-//     user.comparePassword(password, (err: Error, isMatch: boolean) => {
-//       if (err) { return done(err); }
-//       if (isMatch) {
-//         return done(undefined, user);
-//       }
-//       return done(undefined, false, { message: "Invalid email or password." });
-//     });
-//   });
-// }));
-
-// /**
-//  * Login Required middleware.
-//  */
-// export let isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect("/login");
-// };
-
-// /**
-//  * Authorization Required middleware.
-//  */
-// export let isAuthorized = (req: Request, res: Response, next: NextFunction) => {
-//   const provider = req.path.split("/").slice(-1)[0];
-
-//   if (_.find(req.user.tokens, { kind: provider })) {
-//     next();
-//   } else {
-//     res.redirect(`/auth/${provider}`);
-//   }
-// };
+passport.deserializeUser(function(id: number, done) {
+  User.findById(id, (err: any, user: any) => {
+    done(err, user);
+  });
+});

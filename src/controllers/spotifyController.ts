@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { resolve } from 'dns';
+import * as spotifyService from '../services/spotifyService';
 import { NextFunction } from '../../node_modules/@types/express-serve-static-core';
 
 const cors = require('cors');
@@ -7,11 +7,12 @@ const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const request = require('request');
 const rp = require('request-promise');
-rp.options.simple = false;
 
-const redirect_uri = process.env.SPOTIFY_REDIRECT ;
+const redirect_uri = process.env.SPOTIFY_REDIRECT;
 const client_id = process.env.SPOTIFY_CLIENT;
 const client_secret = process.env.SPOTIFY_SECRET;
+const REFRESH_TOKEN = 'refresh_token';
+const AUTH_TOKEN = 'auth_token';
 const stateKey = 'spotify_auth_state';
 
 /**
@@ -37,6 +38,7 @@ const asyncMiddleware = (fn: any) => (
 ) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
+
 /**
  * GET /
  * Home page.
@@ -99,43 +101,23 @@ export let authCallback = (req: Request, res: Response) => {
         const refresh_token = body.refresh_token;
         res.cookie('auth_token', access_token);
         res.cookie('refresh_token', refresh_token);
-        res.render('index.pug', {user: body});
+        
       }
     });
   }
 };
 
 export let authRefresh = async (req: Request, res: Response) => {
-  // requesting access token from refresh token
-  return new Promise(async (resolve, reject) => {
-    const refresh_token = req.cookies['refresh_token'];
-    console.log(refresh_token);
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: {
-        Authorization:
-          'Basic ' +
-          new Buffer(client_id + ':' + client_secret).toString('base64')
-      },
-      form: {
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token
-      },
-      json: true
-    };
-    const response = await rp.post(authOptions);
-    console.log(response);
-    if (response) {
-      console.log('got auth');
-      const access_token = response.access_token;
-      resolve(access_token);
-    } else {
-      console.log('You suck');
-      reject('You suck');
-    }
-  });
+  const refresh_token = req.cookies[REFRESH_TOKEN];
+  // TODO: get refresh token from db
+  return await spotifyService.refreshAuth(refresh_token);
 };
 
+/**
+ * Get user details from spotify
+ * @param req Request
+ * @param res Response
+ */
 export let spotifyLogin = (req: Request, res: Response) => {
   const token: number = req.cookies['auth_token'];
 
@@ -157,37 +139,16 @@ export let spotifyLogin = (req: Request, res: Response) => {
 };
 
 export let getTopSongs = async (req: Request, res: Response) => {
-  console.log('hit route...');
-  try {
-    let token = req.cookies['auth_token'];
+  // TODO get auth from db
+  const auth_token = req.cookies[AUTH_TOKEN];
 
-    const options = {
-      url: 'https://api.spotify.com/v1/me/top/tracks',
-      headers: { Authorization: 'Bearer ' + token },
-      json: true,
-      simple: false
-    };
+  const time_range = req.query.timerange;
 
-    const response = await rp.get(options);
+  if (spotifyService.allowedRanges.includes(time_range)) {
+    const topSongs = await spotifyService.topSongs(auth_token, time_range);
 
-    if (response) {
-      console.log(response);
-      res.render('topsongs.pug', { songs: response.items });
-    } else {
-      // refresh auth token and try again
-      token = await authRefresh(req, res);
-      console.log('This is the token: ' + token);
-      const options = {
-        url: 'https://api.spotify.com/v1/me/top/tracks',
-        headers: { Authorization: 'Bearer ' + token },
-        simple: false,
-        json: true
-      };
-      const response = await rp.get(options);
-      res.render('topsongs.pug', { songs: response.items });
-    }
-  } catch (e) {
-    console.log('You fucked up');
-    res.redirect('/');
+    res.render('topsongs.pug', { songs: topSongs });
+  } else {
+    res.status(403).send('Query string not allowed');
   }
 };
