@@ -2,7 +2,31 @@ extends layout
 
 block content
 
-    br
-    ul.list-group
-        for song in songs
-            li.list-group-item #{song.name}
+    .jumbotron
+    .container.text-center
+        h1.display-4 Your top songs
+        p.lead
+            | Click the album art to hear a sample
+        .card-columns
+            for song in songs
+                .card
+                    a(href=song.preview_url)
+                        img.card-img-top(src=song.album.images[0].url, alt='Card image cap')
+                        .card-body
+                            h5.card-title #{song.name}
+                            p.card-text
+                                | #{song.album.name} 
+
+
+        nav(aria-label='Page navigation example')
+        ul.pagination
+            li.page-item
+                a.page-link(href='#') Previous
+            li.page-item
+                a.page-link(href='#') 1
+            li.page-item
+                a.page-link(href='#') 2
+            li.page-item
+                a.page-link(href='#') 3
+            li.page-item
+                a.page-link(href='#') Next
