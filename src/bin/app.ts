@@ -75,7 +75,6 @@ app.use((req, res, next) => {
 
 import * as spotfiyController from '../controllers/spotifyController';
 import * as userController from '../controllers/userController';
-import { constants } from 'zlib';
 
 // spotify routes
 app.get('/auth', spotfiyController.auth);

@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "start": "npm run-script build && node dist/server.js",
     "watch-ts": "tsc -w",
-    "server": "tsc --watch | nodemon --inspect ./dist/index.js --watch dist",
+    "build": "npm run build-ts && npm run copy",
+    "build-ts": "tsc",
     "watch-node": "nodemon dist/server.js",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "copy": "ts-node copyStaticAssets.ts",
