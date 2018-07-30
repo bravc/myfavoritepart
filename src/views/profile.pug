@@ -15,4 +15,7 @@ block content
         .card-body
             h5.card-title #{user.username}
             p.card-text Top songs
-            a.btn.btn-primary(href='#') Go somewhere
+            a.btn.btn-primary(href='/topplaylist') Make me a playlist
+            br
+            br
+            a.btn.btn-primary(href='/top?timerange=short_term') Get top songs

@@ -69,8 +69,10 @@ sequelize.addModels([User]);
 // set dev views
 if (app.get('env') === 'development') {
     app.set('views', path.join(__dirname, '../../src/views'));
+    app.use('/public', express.static(path.join(__dirname, '../../src/public')));
 } else {
     app.set('views', path.join(__dirname, '../views'));
+    app.use('/public', express.static(path.join(__dirname, '../public')));
 }
 app.set('view engine', 'pug');
 app.set('port', process.env.PORT || 8000);
@@ -104,7 +106,7 @@ app.get('/auth', spotfiyController.auth);
 app.get('/callback', spotfiyController.authCallback);
 app.get('/auth/refresh', spotfiyController.authRefresh);
 app.get('/topplaylist', spotfiyController.topPlaylist);
-app.get('/top', spotfiyController.isAuthenticated, spotfiyController.getTopSongs);
+app.get('/top', spotfiyController.getTopSongs);
 
 // login routes
 app.get('/login', userController.loginGet);

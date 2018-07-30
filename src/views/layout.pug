@@ -5,8 +5,9 @@ html
     link(href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css', rel='stylesheet', integrity='sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB', crossorigin='anonymous')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
     meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
-    block styles
+    base(href='/')
     link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', rel='stylesheet', integrity='sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN', crossorigin='anonymous')
+    block styles
   body
     nav.navbar.navbar-dark.sticky-top.shadow-sm.rounded.bg-dark.navbar-expand-lg(role='navigation')
       // Brand and toggle get grouped for better mobile display
@@ -20,7 +21,7 @@ html
           if user
             li.nav-item
               a.nav-link(href='/profile') #{user.username}
-    .container-fluid
+    .container
       block content
       br
       hr
