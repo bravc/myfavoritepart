@@ -1,4 +1,4 @@
-html, body
+body, html
 { background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-repeat:no-repeat; background-size:cover; }
 
 body {
@@ -13,7 +13,7 @@ body {
   border-radius: 4px;
   font-size: 14px;
   height: 50px;
-  line-height: 50px;
+  /* line-height: 50px; */
 }
 .main-div {
   background: #ffffff none repeat scroll 0 0;
@@ -21,6 +21,10 @@ body {
   margin: 10px auto 30px;
   max-width: 38%;
   padding: 50px 70px 70px 71px;
+}
+
+.card {
+  background-color: #F5F5DC;
 }
 
 .login-form .form-group {
@@ -45,11 +49,7 @@ body {
 .forgot {
   text-align: left; margin-bottom:30px;
 }
-.botto-text {
-  color: #ffffff;
-  font-size: 14px;
-  margin: auto;
-}
+
 .login-form .btn.btn-primary.reset {
   background: #ff9900 none repeat scroll 0 0;
 }
