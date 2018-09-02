@@ -36,10 +36,6 @@ const generateRandomString = function(length: number) {
 //     Promise.resolve(fn(req, res, next)).catch(next);
 // };
 
-/**
- * GET /
- * Home page.
- */
 export let auth = (req: Request, res: Response) => {
     const state = generateRandomString(16);
     res.cookie(stateKey, state);
@@ -152,13 +148,18 @@ export let spotifyLogin = (req: Request, res: Response) => {
 };
 
 export let topPlaylist = async (req: Request, res: Response) => {
-  const auth_token = req.user.auth_token;
+    const auth_token = req.user.auth_token;
 
     await spotifyService.makeTopSongsPlaylist(auth_token, req.user.spotify_id, 'long_term');
 
     res.redirect('/profile');
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ */
 export let getTopSongs = async (req: Request, res: Response) => {
     // TODO get auth from db
     const auth_token = req.user.auth_token;

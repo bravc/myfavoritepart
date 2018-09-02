@@ -1,4 +1,5 @@
 import express = require('express');
+import { Response, Request } from 'express';
 
 // Our Express APP config
 const app = express();
@@ -23,7 +24,7 @@ app.use(cors())
     .use(cookieParser(process.env.SESSION_SECRET))
     .use(bodyParser.urlencoded({ extended: false }));
 
-app.use(cookieParser(process.env.SESSION_SECRET)); 
+app.use(cookieParser(process.env.SESSION_SECRET));
 
 const cookieExpirationDate = new Date();
 const cookieExpirationDays = 365;
@@ -46,7 +47,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('*', function(req, res, next) {
+app.get('*', (req, res, next) => {
     res.locals.user = req.user || null;
     next();
 });
@@ -59,7 +60,9 @@ export const sequelize = new Sequelize({
     password: process.env.DB_PASS,
     host: process.env.DB_HOST,
     modelPaths: ['../models'],
-    operatorsAliases: false
+    operatorsAliases: false,
+    logging: false
+    // logging: app.get('env') === 'development' ? console.log : false
 });
 
 sequelize.addModels([User]);
@@ -77,20 +80,8 @@ if (app.get('env') === 'development') {
 app.set('view engine', 'pug');
 app.set('port', process.env.PORT || 8000);
 
-// Logging
-// app.use(
-//   expressWinston.logger({
-//     transports: [
-//       new winston.transports.Console({
-//         json: true,
-//         colorize: true
-//       })
-//     ]
-//   })
-// );
-
 // API Endpoints
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     if (req.user) {
         res.render('index.pug');
     } else {

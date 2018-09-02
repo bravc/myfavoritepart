@@ -40,32 +40,6 @@ export let refreshAuth = async (refresh_token: number): Promise<any> => {
 };
 
 /**
- * Get a users tops songs with optional params
- *
- * @param auth_token number
- */
-export let topSongs = async (auth_token: number, time_range: string): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-        // add params
-        const params = querystring.stringify({
-            time_range
-        });
-
-        const options = {
-            url: 'https://api.spotify.com/v1/me/top/tracks?' + params,
-            headers: { Authorization: 'Bearer ' + auth_token },
-            json: true,
-            simple: false
-        };
-        const response = await rp.get(options);
-
-        if (response) {
-            resolve(response.items);
-        }
-    });
-};
-
-/**
  * Login and create new user
  *
  * @param auth_token number
@@ -92,6 +66,32 @@ export let login = async (auth_token: number, refresh_token: number) => {
             resolve(user);
         } else {
             reject('Unable to create user in db');
+        }
+    });
+};
+
+/**
+ * Get a users tops songs with optional params
+ *
+ * @param auth_token number
+ */
+export let topSongs = async (auth_token: number, time_range: string): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+        // add params
+        const params = querystring.stringify({
+            time_range
+        });
+
+        const options = {
+            url: 'https://api.spotify.com/v1/me/top/tracks?' + params,
+            headers: { Authorization: 'Bearer ' + auth_token },
+            json: true,
+            simple: false
+        };
+        const response = await rp.get(options);
+
+        if (response) {
+            resolve(response.items);
         }
     });
 };
@@ -124,6 +124,13 @@ export let makePlaylist = (auth_token: number, user_id: number): Promise<any> =>
     });
 };
 
+/**
+ * Make a song with users tops songs
+ *
+ * @param auth_token
+ * @param user_id
+ * @param time_range
+ */
 export let makeTopSongsPlaylist = (auth_token: number, user_id: number, time_range: string) => {
     return new Promise(async (resolve, reject) => {
         const topsongs = await topSongs(auth_token, time_range);
@@ -152,4 +159,8 @@ export let makeTopSongsPlaylist = (auth_token: number, user_id: number, time_ran
             reject('Failed to add songs');
         }
     });
+};
+
+export let search = (auth_token: number, user_id: number) => {
+    console.log('Hi koj');
 };
