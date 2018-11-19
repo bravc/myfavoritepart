@@ -3,6 +3,7 @@ import { User } from '../models/User';
 import * as bcrypt from 'bcrypt-nodejs';
 const rp = require('request-promise');
 const querystring = require('querystring');
+const redirect_uri = process.env.SPOTIFY_REDIRECT;
 
 export const allowedRanges: string[] = ['long_term', 'medium_term', 'short_term'];
 
@@ -37,6 +38,32 @@ export let refreshAuth = async (refresh_token: number): Promise<any> => {
             reject('Failed to refresh auth');
         }
     });
+};
+
+export let swapToken = async (token: String): Promise<any> => {
+    try {
+        const options = {
+            url: 'https://accounts.spotify.com/api/token',
+            headers: {
+                Authorization:
+                    'Basic ' +
+                    new Buffer(process.env.SPOTIFY_CLIENT + ':' + process.env.SPOTIFY_SECRET).toString('base64')
+            },
+            form: {
+                grant_type: 'authorization_code',
+                redirect_uri: redirect_uri,
+                code: token
+            },
+            json: true
+        };
+
+        const response = await rp.post(options);
+        console.log(response);
+        resolve('cool');
+    } catch (error) {
+        console.log(error);
+        resolve('fail');
+    }
 };
 
 /**

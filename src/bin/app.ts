@@ -96,6 +96,7 @@ import * as userController from '../controllers/userController';
 app.get('/auth', spotfiyController.auth);
 app.get('/callback', spotfiyController.authCallback);
 app.get('/auth/refresh', spotfiyController.authRefresh);
+app.post('/auth/swap', spotfiyController.authSwap);
 app.get('/topplaylist', spotfiyController.topPlaylist);
 app.get('/top', spotfiyController.getTopSongs);
 

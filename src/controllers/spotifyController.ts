@@ -32,10 +32,6 @@ const generateRandomString = function(length: number) {
     return text;
 };
 
-// const asyncMiddleware = (fn: any) => (req: Request, res: Response, next: NextFunction) => {
-//     Promise.resolve(fn(req, res, next)).catch(next);
-// };
-
 export let auth = (req: Request, res: Response) => {
     const state = generateRandomString(16);
     res.cookie(stateKey, state);
@@ -118,9 +114,14 @@ export let authCallback = (req: Request, res: Response) => {
 };
 
 export let authRefresh = async (req: Request, res: Response) => {
-    const refresh_token = req.user.refresh_token;
+    const refresh_token = req.body.refresh_token;
     // TODO: get refresh token from db
     return await spotifyService.refreshAuth(refresh_token);
+};
+
+export let authSwap = async (req: Request, res: Response) => {
+    const token = req.body.code;
+    return await spotifyService.swapToken(token);
 };
 
 /**
